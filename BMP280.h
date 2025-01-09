@@ -12,16 +12,17 @@
 	Our example code uses the "pizza-eating" license. You can do anything
 	you like with this code. No really, anything. If you find it useful,
 	buy me italian pizza someday.
+
+	Modified by John Greenwell to add custom HAL support, January 2025
 */
 
 #ifndef BMP280_h
 #define BMP280_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
+#include "hal.h"
+
+namespace PeripheralIO
+{
 
 // #define _debugSerial
 // #define _debugTestData
@@ -29,10 +30,9 @@
 class BMP280
 {
 	public:
-		BMP280(); // base type
+		BMP280(HAL::I2C& i2c); // base type
 
 		char begin();
-		char begin(int sdaPin, int sclPin);
 			// call pressure.begin() to initialize BMP280 before use
 			// returns 1 if success, 0 if failure (i2C connection problem.)
 				
@@ -111,6 +111,7 @@ class BMP280
 				
 		//int dig_T2 , dig_T3 , dig_T4 , dig_P2 , dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9; 
 		//unsigned int dig_P1 , dig_T1 ;
+		HAL::I2C& _i2c;
 		double dig_T1, dig_T2 , dig_T3 , dig_T4 , dig_P1, dig_P2 , dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9; 
 		short oversampling, oversampling_t;
 		double t_fine;
@@ -131,5 +132,6 @@ class BMP280
 #define	BMP280_COMMAND_PRESSURE4 0x5D    
 #define	BMP280_COMMAND_OVERSAMPLING_MAX 0xF5
 
+}
 
 #endif

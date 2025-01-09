@@ -13,32 +13,29 @@
 	Our example code uses the "pizza-eating" license. You can do anything
 	you like with this code. No really, anything. If you find it useful,
 	buy me italian pizza someday.
+
+	Modified by John Greenwell to add custom HAL support, January 2025
 */
 
-#include "BMP280.h"
-#include <Wire.h>
 #include <stdio.h>
 #include <math.h>
+#include "bmp280.h"
 
+namespace PeripheralIO
+{
 
-BMP280::BMP280()
+BMP280::BMP280(HAL::I2C& i2c)
+: _i2c(i2c)
 {
 	//do nothing
 }
 /*
 *	Initialize library and coefficient for measurements
+*   I2C should have already been initialized by main application and passed
+*   in as reference to this driver
 */
-char BMP280::begin(int sdaPin, int sclPin)
-{
-	Wire.begin(sdaPin,sclPin);
-	return (readCalibration());
-}
-
 char BMP280::begin() 
 {
-	
-	// Start up the Arduino's "wire" (I2C) library:
-	Wire.begin();
 	return (readCalibration());
 }
 
@@ -153,22 +150,7 @@ char BMP280::readUInt(char address, double &value)
 
 char BMP280::readBytes(unsigned char *values, char length)
 {
-	char x;
-
-	Wire.beginTransmission(BMP280_ADDR);
-	Wire.write(values[0]);
-	error = Wire.endTransmission();
-	if (error == 0)
-	{
-		Wire.requestFrom(BMP280_ADDR,length);
-		while(Wire.available() != length) ; // wait until bytes are ready
-		for(x=0;x<length;x++)
-		{
-			values[x] = Wire.read();
-		}
-		return(1);
-	}
-	return(0);
+	return !_i2c.writeRead(BMP280_ADDR, values[0], values, (uint32_t)length);
 }
 /*
 ** Write an array of bytes to device
@@ -177,13 +159,7 @@ char BMP280::readBytes(unsigned char *values, char length)
 */
 char BMP280::writeBytes(unsigned char *values, char length)
 {
-	Wire.beginTransmission(BMP280_ADDR);
-	Wire.write(values,length);
-	error = Wire.endTransmission();
-	if (error == 0)
-		return(1);
-	else
-		return(0);
+	return !_i2c.write(BMP280_ADDR, values[0], &values[1], (uint32_t)length);
 }
 
 short BMP280::getOversampling(void)
@@ -267,7 +243,7 @@ char BMP280::getUnPT(double &uP, double &uT)
 	result = readBytes(data, 6); // 0xF7; xF8, 0xF9, 0xFA, 0xFB, 0xFC
 	if (result) // good read
 	{
-		double factor = pow(2, 4);
+		//double factor = pow(2, 4);
 		uP = (double)(data[0] *4096 + data[1]*16 + data[2]/16) ;	//20bit UP
 		uT = (double)(data[3]*4096 + data[4]*16 + data[5]/16) ;	//20bit UT
 #ifdef _debugSerial
@@ -437,5 +413,7 @@ char BMP280::getError(void)
 	// 4 = Other error
 {
 	return(error);
+}
+
 }
 
