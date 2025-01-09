@@ -5,21 +5,30 @@
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/mahfuz195/BMP280-Arduino-Library/"
+    "url": "https://github.com/johnmgreenwell/bmp280"
   },
   "authors": 
   [
     {
       "name": "mahfuz195",
+      "maintainer": false
+    },
+    {
+      "name": "johnmgreenwell",
       "maintainer": true
     }
   ],
   "dependencies":
   {
-    "name": "Wire",
-    "frameworks": "arduino"
   },
   "version": "1.0.0",
-  "frameworks": "arduino",
-  "platforms": "*"
+  "license": "MIT",
+  "frameworks": "*",
+  "platforms": "*",
+  "build": {
+    "libArchive": false,
+    "flags": [
+    "-I../../include"
+    ]
+  }
 }
