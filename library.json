@@ -1,7 +1,7 @@
 {
   "name": "BMP280",
   "keywords": "i2c, sensor, temperature, pressure, altitude",
-  "description": "Arduino Library for Bosch BMP280",
+  "description": "Driver for Bosch BMP280",
   "repository":
   {
     "type": "git",
