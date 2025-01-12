@@ -1,11 +1,12 @@
-# BMP280 Arduino Library
-======================
+# BMP280 Driver
+================
 
-This library uses I2C communication to read the Temperature( degC) , Pressure (mBar) and Altitude (m).
+This driver uses I2C communication to read the Temperature( degC) , Pressure (mBar) and Altitude (m).
 
 Modified by John Greenwell to adapt driver for custom HAL support, 2025.
 
 ## Usage
+=========
 
 For this modified version, the following hardware abstraction layer (HAL) requirements must be satisfied:
 
@@ -39,9 +40,9 @@ VDDIO ----> VDD
 ## Instructions :
 =============
 
-Copy the BMP280 folder to Arduino/libraries
+May be directly copied into the lib folder for platformio projects, or alternately configured.
 
-Restart Arduino and Upload "measurments" sketch in Arduino.
+For Arduino, copy the BMP280 folder to Arduino/libraries. Restart Arduino and Upload "measurments" sketch in Arduino.
 
 
 
